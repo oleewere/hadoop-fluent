@@ -31,6 +31,9 @@ subprojects {
   apply plugin: 'idea'
   apply plugin: 'maven'
 
-  group 'com.cloudera'
+  group 'com.cloudera.hadoop.client'
+
+  sourceCompatibility = 1.8
+  targetCompatibility = 1.8
 
 }
