@@ -15,18 +15,13 @@
  * limitations under the License.
  */
 
-
 subprojects {
-  buildscript {
-    repositories {
-      maven {
-        url "https://plugins.gradle.org/m2/"
-      }
-      mavenCentral()
-      mavenLocal()
-      jcenter()
-    }
+
+  repositories {
+    mavenCentral()
+    jcenter()
   }
+
   apply plugin: 'java'
   apply plugin: 'idea'
   apply plugin: 'maven'
@@ -36,4 +31,10 @@ subprojects {
   sourceCompatibility = 1.8
   targetCompatibility = 1.8
 
+  task copyDeps(type: Copy) {
+    from configurations.compile
+    into "$buildDir/libs"
+  }
+
+  copyDeps.dependsOn compileJava
 }
