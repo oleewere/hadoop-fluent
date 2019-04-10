@@ -3,8 +3,6 @@
 .gradle/
 build/
 **/target/
-mpack/ambari-definitions/module-definitions
-mpack/ambari-definitions/module-jsons
 /out/
 **/pom.xml.versionsBackup
 .DS_Store

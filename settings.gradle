@@ -1,0 +1,6 @@
+include 'hadoop-adlsv2-client'
+include 'hadoop-gcs-client'
+include 'hadoop-s3-client'
+include 'hadoop-wasb-client'
+
+rootProject.name = 'hadoop-cloud-clients'
