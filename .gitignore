@@ -7,3 +7,4 @@ build/
 **/pom.xml.versionsBackup
 .DS_Store
 *.pyc
+*/out/
