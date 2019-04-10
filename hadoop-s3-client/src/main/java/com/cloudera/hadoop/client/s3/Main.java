@@ -18,5 +18,13 @@
  */
 package com.cloudera.hadoop.client.s3;
 
+import org.apache.hadoop.conf.Configuration;
+
 public class Main {
+
+  public static void main(String[] args) {
+    Configuration conf = new Configuration();
+    System.out.println(conf);
+  }
+
 }

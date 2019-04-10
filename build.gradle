@@ -37,4 +37,8 @@ subprojects {
   }
 
   copyDeps.dependsOn compileJava
+
+  dependencies {
+    compile group: 'org.apache.hadoop', name: 'hadoop-common', version: "${hadoopVersion}"
+  }
 }
