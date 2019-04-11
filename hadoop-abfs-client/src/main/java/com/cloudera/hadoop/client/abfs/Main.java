@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package com.cloudera.hadoop.client.adls;
+package com.cloudera.hadoop.client.abfs;
 
 public class Main {
 }

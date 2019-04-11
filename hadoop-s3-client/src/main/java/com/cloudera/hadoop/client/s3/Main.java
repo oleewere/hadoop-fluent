@@ -26,5 +26,4 @@ public class Main {
     Configuration conf = new Configuration();
     System.out.println(conf);
   }
-
 }
