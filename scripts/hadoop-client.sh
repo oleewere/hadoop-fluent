@@ -24,10 +24,6 @@ function main() {
           local UPLOAD_PATH="$2"
           shift 2
     ;;
-    -v|--verbose)
-          local VERBOSE="true"
-          shift 1
-    ;;
     -h|--help)
           shift 1
           print_help
