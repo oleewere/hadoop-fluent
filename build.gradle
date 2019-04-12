@@ -15,6 +15,22 @@
  * limitations under the License.
  */
 
+buildscript {
+  repositories {
+    maven {
+      url "https://plugins.gradle.org/m2/"
+    }
+    mavenCentral()
+    jcenter()
+  }
+  dependencies {
+    classpath "com.netflix.nebula:gradle-ospackage-plugin:4.4.0"
+    classpath 'de.undercouch:gradle-download-task:3.2.0'
+  }
+}
+
+apply plugin: "nebula.ospackage"
+
 subprojects {
 
   repositories {
@@ -42,3 +58,39 @@ subprojects {
     compile group: 'org.apache.hadoop', name: 'hadoop-common', version: "${hadoopVersion}"
   }
 }
+
+task processHadoopClients(type:Copy) {
+  into "build/hadoop-cloud-clients"
+  with copySpec {
+    from "${projectDir}/hadoop-abfs-client/build/libs"
+    into { "libs/hadoop-abfs-client" }
+  }
+  with copySpec {
+    from "${projectDir}/hadoop-gcs-client/build/libs"
+    into { "libs/hadoop-gcs-client" }
+  }
+  with copySpec {
+    from "${projectDir}/hadoop-s3-client/build/libs"
+    into { "libs/hadoop-s3-client" }
+  }
+  with copySpec {
+    from "${projectDir}/hadoop-wasb-client/build/libs"
+    into { "libs/hadoop-wasb-client" }
+  }
+  with copySpec {
+    from "${projectDir}/scripts/hadoop-client.sh"
+    into { "bin/" }
+  }
+}
+
+task distTar(type: Tar, dependsOn: ['processHadoopClients']){
+  extension = 'tar.gz'
+  compression = Compression.GZIP
+  baseName = "hadoop-cloud-clients"
+  from "build/hadoop-cloud-clients"
+  doLast {
+    ant.checksum(file: "${buildDir}/distributions/hadoop-cloud-clients-${version}.tar.gz", algorithm: "SHA-1", fileext: ".sha")
+  }
+}
+
+
