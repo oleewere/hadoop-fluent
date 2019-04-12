@@ -15,3 +15,12 @@ build:
 
 dist:
 	./gradlew clean jar copyDeps distTar
+
+rpm:
+	./gradlew clean jar copyDeps distTar rpm
+
+deb:
+	./gradlew clean jar copyDeps distTar deb
+
+all:
+	./gradlew clean jar copyDeps distTar rpm deb

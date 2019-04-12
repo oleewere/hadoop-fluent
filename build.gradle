@@ -93,4 +93,34 @@ task distTar(type: Tar, dependsOn: ['processHadoopClients']){
   }
 }
 
+ext.distPackageName = "hadoop-cloud-clients"
+ext.hadoopCloudClientDescription = "Hadoop Cloud Clients"
+ext.buildVersion = "${version}"
+ext.buildNumber = "${buildNumber}"
+ext.hadoopCloudClientFolder = "/usr/lib/hadoop-cloud-clients"
+
+ospackage {
+  packageName = "${distPackageName}"
+  version = "${buildVersion}"
+  release = "${buildNumber}"
+  into "${hadoopCloudClientFolder}"
+  os = LINUX
+  user = 'root'
+  permissionGroup = 'root'
+  license = "APL2"
+  url = "https://hadoop.apache.org/"
+  summary = ""
+  from("build/distributions/hadoop-cloud-clients-${buildVersion}.tar.gz") {
+    into "${distPackageName}"
+  }
+}
+
+task rpm(type: Rpm, dependsOn: [distTar]) {
+  packageDescription = "${hadoopCloudClientDescription}"
+}
+
+task deb(type: Deb, dependsOn: [distTar]) {
+  packageDescription = "${hadoopCloudClientDescription}".replaceAll("\n", "\n:")
+}
+
 
