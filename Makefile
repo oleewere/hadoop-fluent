@@ -12,3 +12,6 @@
 
 build:
 	./gradlew clean jar copyDeps
+
+dist:
+	./gradlew clean jar copyDeps distTar
