@@ -1,4 +1,4 @@
-package com.cloudera.hadoop.cloud;
+package com.cloudera.hadoop.cloud.fluent.upload;
 
 import java.io.Closeable;
 import java.util.Map;

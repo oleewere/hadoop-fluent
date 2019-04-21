@@ -1,4 +1,4 @@
-package com.cloudera.hadoop.cloud.util;
+package com.cloudera.hadoop.cloud.fluent.util;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;

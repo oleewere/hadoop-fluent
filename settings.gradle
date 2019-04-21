@@ -1,5 +1,4 @@
 include 'hadoop-fluent-forward'
-include 'hadoop-cloud-client'
 include 'hadoop-cloud-abfs'
 include 'hadoop-cloud-gcs'
 include 'hadoop-cloud-s3'

@@ -1,6 +1,6 @@
-package com.cloudera.hadoop.cloud;
+package com.cloudera.hadoop.cloud.fluent.upload;
 
-import com.cloudera.hadoop.cloud.util.HDFSUtil;
+import com.cloudera.hadoop.cloud.fluent.util.HDFSUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.log4j.LogManager;

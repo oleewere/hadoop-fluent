@@ -34,6 +34,7 @@ apply plugin: "nebula.ospackage"
 subprojects {
 
   repositories {
+    mavenLocal()
     mavenCentral()
     jcenter()
   }
@@ -58,12 +59,8 @@ subprojects {
 task processHadoopClients(type:Copy) {
   into "build/hadoop-cloud-fluent"
   with copySpec {
-    from "${projectDir}/hadoop-cloud-client/build/libs"
-    into { "libs/common" }
-  }
-  with copySpec {
     from "${projectDir}/hadoop-fluent-forward/build/libs"
-    into { "libs/common" }
+    into { "libs/core" }
   }
   with copySpec {
     from "${projectDir}/hadoop-cloud-abfs/build/libs"

@@ -1,5 +1,10 @@
 dependencies {
   compile group: 'com.okumin', name: 'influent-java', version: "${influentVersion}"
   compile group: 'com.okumin', name: 'influent-transport', version: "${influentVersion}"
+  compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: "${log4jVersion}"
+  compile group: 'org.apache.logging.log4j', name: 'log4j-1.2-api', version: "${log4jVersion}"
   compile group: 'org.apache.logging.log4j', name: 'log4j-core', version: "${log4jVersion}"
+  compile("org.apache.hadoop:hadoop-common:${hadoopVersion}") {
+    exclude group: 'log4j'
+  }
 }
