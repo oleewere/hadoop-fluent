@@ -42,7 +42,7 @@ subprojects {
   apply plugin: 'idea'
   apply plugin: 'maven'
 
-  group 'com.cloudera.hadoop.fluent'
+  group 'com.cloudera.hadoop.cloud'
 
   sourceCompatibility = 1.8
   targetCompatibility = 1.8
