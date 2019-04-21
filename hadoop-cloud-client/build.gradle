@@ -1,0 +1,3 @@
+dependencies {
+  compile group: 'org.apache.hadoop', name: 'hadoop-common', version: "${hadoopVersion}"
+}

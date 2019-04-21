@@ -10,17 +10,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-build:
-	./gradlew clean jar copyDeps
+package: build
+	./gradlew distTar
 
-dist:
-	./gradlew clean jar copyDeps distTar
+build: clean
+	./gradlew jar copyDeps
 
-rpm:
-	./gradlew clean jar copyDeps distTar rpm
+clean:
+	./gradlew clean
 
-deb:
-	./gradlew clean jar copyDeps distTar deb
+rpm: package
+	./gradlew rpm
 
-all:
-	./gradlew clean jar copyDeps distTar rpm deb
+deb: package
+	./gradlew deb
+
+all: deb

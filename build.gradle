@@ -42,7 +42,7 @@ subprojects {
   apply plugin: 'idea'
   apply plugin: 'maven'
 
-  group 'com.cloudera.hadoop.client'
+  group 'com.cloudera.hadoop.fluent'
 
   sourceCompatibility = 1.8
   targetCompatibility = 1.8
@@ -53,29 +53,33 @@ subprojects {
   }
 
   copyDeps.dependsOn compileJava
-
-  dependencies {
-    compile group: 'org.apache.hadoop', name: 'hadoop-common', version: "${hadoopVersion}"
-  }
 }
 
 task processHadoopClients(type:Copy) {
-  into "build/hadoop-cloud-clients"
+  into "build/hadoop-cloud-fluent"
   with copySpec {
-    from "${projectDir}/hadoop-abfs-client/build/libs"
-    into { "libs/hadoop-abfs-client" }
+    from "${projectDir}/hadoop-cloud-client/build/libs"
+    into { "libs/common" }
   }
   with copySpec {
-    from "${projectDir}/hadoop-gcs-client/build/libs"
-    into { "libs/hadoop-gcs-client" }
+    from "${projectDir}/hadoop-fluent-forward/build/libs"
+    into { "libs/common" }
   }
   with copySpec {
-    from "${projectDir}/hadoop-s3-client/build/libs"
-    into { "libs/hadoop-s3-client" }
+    from "${projectDir}/hadoop-cloud-abfs/build/libs"
+    into { "libs/abfs" }
   }
   with copySpec {
-    from "${projectDir}/hadoop-wasb-client/build/libs"
-    into { "libs/hadoop-wasb-client" }
+    from "${projectDir}/hadoop-cloud-gcs/build/libs"
+    into { "libs/gcs" }
+  }
+  with copySpec {
+    from "${projectDir}/hadoop-cloud-s3/build/libs"
+    into { "libs/s3" }
+  }
+  with copySpec {
+    from "${projectDir}/hadoop-cloud-wasb/build/libs"
+    into { "libs/wasb" }
   }
   with copySpec {
     from "${projectDir}/scripts/hadoop-client.sh"
@@ -86,41 +90,41 @@ task processHadoopClients(type:Copy) {
 task distTar(type: Tar, dependsOn: ['processHadoopClients']){
   extension = 'tar.gz'
   compression = Compression.GZIP
-  baseName = "hadoop-cloud-clients"
-  from "build/hadoop-cloud-clients"
+  baseName = "hadoop-cloud-fluent"
+  from "build/hadoop-cloud-fluent"
   doLast {
-    ant.checksum(file: "${buildDir}/distributions/hadoop-cloud-clients-${version}.tar.gz", algorithm: "SHA-1", fileext: ".sha")
+    ant.checksum(file: "${buildDir}/distributions/hadoop-cloud-fluent-${version}.tar.gz", algorithm: "SHA-1", fileext: ".sha")
   }
 }
 
-ext.distPackageName = "hadoop-cloud-clients"
-ext.hadoopCloudClientDescription = "Hadoop Cloud Clients"
+ext.distPackageName = "hadoop-cloud-fluent"
+ext.hadoopCloudFluentDescription = "Hadoop Cloud Fluent"
 ext.buildVersion = "${version}"
 ext.buildNumber = "${buildNumber}"
-ext.hadoopCloudClientFolder = "/usr/lib/hadoop-cloud-clients"
+ext.hadoopCloudFluentFolder = "/usr/lib/hadoop-cloud-fluent"
 
 ospackage {
   packageName = "${distPackageName}"
   version = "${buildVersion}"
   release = "${buildNumber}"
-  into "${hadoopCloudClientFolder}"
+  into "${hadoopCloudFluentFolder}"
   os = LINUX
   user = 'root'
   permissionGroup = 'root'
   license = "APL2"
   url = "https://hadoop.apache.org/"
   summary = ""
-  from("build/distributions/hadoop-cloud-clients-${buildVersion}.tar.gz") {
+  from("build/distributions/hadoop-cloud-fluent-${buildVersion}.tar.gz") {
     into "${distPackageName}"
   }
 }
 
 task rpm(type: Rpm, dependsOn: [distTar]) {
-  packageDescription = "${hadoopCloudClientDescription}"
+  packageDescription = "${hadoopCloudFluentDescription}"
 }
 
 task deb(type: Deb, dependsOn: [distTar]) {
-  packageDescription = "${hadoopCloudClientDescription}".replaceAll("\n", "\n:")
+  packageDescription = "${hadoopCloudFluentDescription}".replaceAll("\n", "\n:")
 }
 
 
