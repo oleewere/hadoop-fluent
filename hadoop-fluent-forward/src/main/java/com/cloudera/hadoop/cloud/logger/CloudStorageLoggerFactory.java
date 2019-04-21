@@ -1,4 +1,4 @@
-package com.cloudera.hadoop.cloud.fluent.logger;
+package com.cloudera.hadoop.cloud.logger;
 
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;

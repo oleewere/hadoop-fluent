@@ -1,6 +1,6 @@
-package com.cloudera.hadoop.cloud.fluent.output;
+package com.cloudera.hadoop.cloud.output;
 
-import com.cloudera.hadoop.cloud.fluent.logger.CloudStorageLoggerConf;
+import com.cloudera.hadoop.cloud.logger.CloudStorageLoggerConf;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

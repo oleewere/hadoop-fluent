@@ -1,4 +1,4 @@
-package com.cloudera.hadoop.cloud.fluent.upload;
+package com.cloudera.hadoop.cloud.upload;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
