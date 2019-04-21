@@ -24,3 +24,6 @@ deb:
 
 all:
 	./gradlew clean jar copyDeps distTar rpm deb
+
+docker-build: dist
+	docker build -t oleewere/fluentd-hadoop-client:latest .

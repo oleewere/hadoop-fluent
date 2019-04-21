@@ -1,0 +1,27 @@
+version: '3.3'
+services:
+  fakes3:
+    image: localstack/localstack
+    hostname: fakes3
+    ports:
+    - "4569:4569"
+    environment:
+    - SERVICES=s3:4569
+    - DEBUG=s3
+    networks:
+      test-network:
+        aliases:
+          - testbucket.fakes3
+  fluentd:
+    image: oleewere/fluentd-hadoop-client:latest
+    hostname: fluentd
+    environment:
+      - AWS_ACCESS_KEY=myAccessKey
+      - AWS_SECRET_ACCESS_KEY=mySecretKey
+    networks:
+      - test-network
+    volumes:
+      - ./fluentd/fluent.conf:/fluentd/etc/fluent.conf
+networks:
+  test-network:
+    driver: bridge

@@ -1,5 +1,18 @@
 #!/bin/bash
 
+readlinkf(){
+  # get real path on mac OSX
+  perl -MCwd -e 'print Cwd::abs_path shift' "$1";
+}
+
+if [ "$(uname -s)" = 'Linux' ]; then
+  SCRIPT_DIR="`dirname "$(readlink -f "$0")"`"
+else
+  SCRIPT_DIR="`dirname "$(readlinkf "$0")"`"
+fi
+
+HADOOP_CLOUD_CLIENT_ROOT="`dirname \"$SCRIPT_DIR\"`"
+
 function print_help() {
   cat << EOF
    Usage: hadoop-client.sh --type <STORAGE_TYPE> --path <PATH> [additional options]
