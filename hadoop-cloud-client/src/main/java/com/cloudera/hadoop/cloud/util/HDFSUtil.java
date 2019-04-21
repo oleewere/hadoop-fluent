@@ -82,7 +82,7 @@ public class HDFSUtil {
     for (Map.Entry<String, String> prop : configMap.entrySet()) {
       String propertyName = prop.getKey();
       if (propertyName.startsWith("fs.")) {
-        logger.info("Override {} configuration (by logfeeder.properties)", propertyName);
+        logger.info("Override {} configuration (by custom properties)", propertyName);
         configuration.set(propertyName, prop.getValue());
       }
     }
