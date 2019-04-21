@@ -1,3 +1,7 @@
 dependencies {
-  compile group: 'org.apache.hadoop', name: 'hadoop-common', version: "${hadoopVersion}"
+  compile("org.apache.hadoop:hadoop-common:${hadoopVersion}") {
+    exclude group: 'log4j'
+  }
+  compile group: 'org.apache.logging.log4j', name: 'log4j-api', version: "${log4jVersion}"
+  compile group: 'org.apache.logging.log4j', name: 'log4j-1.2-api', version: "${log4jVersion}"
 }
