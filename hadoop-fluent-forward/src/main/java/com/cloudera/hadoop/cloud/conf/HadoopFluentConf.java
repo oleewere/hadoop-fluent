@@ -24,14 +24,13 @@ public class HadoopFluentConf {
       String getHostName = ip.getHostName();
       String getCanonicalHostName = ip.getCanonicalHostName();
       if (!getCanonicalHostName.equalsIgnoreCase(ipAddress)) {
-        logger.info("Using getCanonicalHostName()=" + getCanonicalHostName);
+        logger.info("Use canonical hostname: " + getCanonicalHostName);
         hostName = getCanonicalHostName;
       } else {
-        logger.info("Using getHostName()=" + getHostName);
+        logger.info("Use hostname: " + getHostName);
         hostName = getHostName;
       }
-      logger.info("ipAddress=" + ipAddress + ", getHostName=" + getHostName + ", getCanonicalHostName=" + getCanonicalHostName +
-        ", hostName=" + hostName);
+      logger.info("IP Address; " + ipAddress + ", Hostname: " + getHostName + ", Canonical Hostname: " + getCanonicalHostName);
     } catch (UnknownHostException e) {
       logger.error("Error getting hostname.", e);
     }
