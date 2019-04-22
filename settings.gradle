@@ -4,4 +4,4 @@ include 'hadoop-cloud-gcs'
 include 'hadoop-cloud-s3'
 include 'hadoop-cloud-wasb'
 
-rootProject.name = 'hadoop-cloud-fluent'
+rootProject.name = 'hadoop-fluent'
