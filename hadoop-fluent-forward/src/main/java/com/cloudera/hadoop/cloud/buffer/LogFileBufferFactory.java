@@ -1,5 +1,7 @@
-package com.cloudera.hadoop.cloud.logger;
+package com.cloudera.hadoop.cloud.buffer;
 
+import com.cloudera.hadoop.cloud.conf.BufferConf;
+import com.cloudera.hadoop.cloud.conf.HadoopFluentConf;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -17,16 +19,17 @@ import org.apache.logging.log4j.core.layout.PatternLayout;
 import java.io.File;
 import java.nio.file.Paths;
 
-public class CloudStorageLoggerFactory {
+public class LogFileBufferFactory {
   private static final String ACTIVE_FOLDER = "active";
   private static final String ARCHIVED_FOLDER = "archived";
   private static final String DATE_PATTERN_SUFFIX_GZ = "-%d{yyyy-MM-dd-HH-mm-ss-SSS}.log.gz";
   private static final String DATE_PATTERN_SUFFIX = "-%d{yyyy-MM-dd-HH-mm-ss-SSS}.log";
 
-  public static Logger createLogger(String tag, LoggerContext loggerContext, CloudStorageLoggerConf conf) {
+  public static Logger createLogger(String tag, LoggerContext loggerContext, HadoopFluentConf fluentConf) {
     Configuration config = loggerContext.getConfiguration();
+    BufferConf conf = fluentConf.getBufferConf();
     String baseDir = conf.getRolloverArchiveBaseDir();
-    String clusterHostnameBaseDir = Paths.get(baseDir, conf.getClusterName(), CloudStorageLoggerConf.hostName).toFile().getAbsolutePath();
+    String clusterHostnameBaseDir = Paths.get(baseDir, fluentConf.getClusterName(), HadoopFluentConf.hostName).toFile().getAbsolutePath();
     String activeLogDir = Paths.get(clusterHostnameBaseDir, ACTIVE_FOLDER, tag).toFile().getAbsolutePath();
     String archiveLogDir = Paths.get(clusterHostnameBaseDir, ARCHIVED_FOLDER, tag).toFile().getAbsolutePath();
 
@@ -42,8 +45,8 @@ public class CloudStorageLoggerFactory {
     String rolloverSize = conf.getRolloverSize().toString() + conf.getRolloverSizeFormat();
     SizeBasedTriggeringPolicy sizeBasedTriggeringPolicy = SizeBasedTriggeringPolicy.createPolicy(rolloverSize);
 
-    final Integer thresholdMin = conf.getRolloverThresholdTimeMins();
-    final Integer thresholdInterval = thresholdMin * 60000; // 1 min = 60000 milliseconds
+    final int thresholdMin = conf.getRolloverThresholdTimeMins();
+    final int thresholdInterval = thresholdMin * 60000; // 1 min = 60000 milliseconds
 
     TimeBasedTriggeringPolicy timeBasedTriggeringPolicy = TimeBasedTriggeringPolicy.newBuilder()
       .withInterval(thresholdInterval)
