@@ -82,6 +82,14 @@ task processHadoopClients(type:Copy) {
     from "${projectDir}/scripts/hadoop-fluent.sh"
     into { "bin/" }
   }
+  with copySpec {
+    from "${projectDir}/hadoop-fluent-forward/build/resources/main/hadoop-fluent.conf"
+    into { "conf/" }
+  }
+  with copySpec {
+    from "${projectDir}/hadoop-fluent-forward/build/resources/main/log4j2.xml"
+    into { "conf/" }
+  }
 }
 
 task distTar(type: Tar, dependsOn: ['processHadoopClients']){
