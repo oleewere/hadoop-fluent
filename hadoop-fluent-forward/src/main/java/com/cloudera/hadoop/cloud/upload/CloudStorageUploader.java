@@ -51,7 +51,7 @@ public class CloudStorageUploader extends Thread {
   /**
    * Finds .log and .gz files and upload them to cloud storage by an uploader client
    */
-  void doUpload(int timeout) {
+  public void doUpload(int timeout) {
     try {
       final File archiveLogDir = Paths.get(hadoopFluentConf.getBufferConf().getRolloverArchiveBaseDir(),
         hadoopFluentConf.getClusterName(), HadoopFluentConf.hostName, "archived").toFile();

@@ -66,7 +66,9 @@ public class HadoopFluentConf {
     this.uploaderConf = new UploaderConf(
       "",
       getConfigAsInteger("uploader", "timeout_mins", 10),
-      getConfigAsInteger("uploader", "interval_secs", 300));
+      getConfigAsInteger("uploader", "interval_secs", 300),
+      getConfigAsBoolean("uploader", "upload_on_shutdown", true)
+      );
   }
 
   public BufferConf getBufferConf() {

@@ -16,7 +16,6 @@ public class Forward {
     }
 
     final HadoopFluentConf hadoopFluentConf = new HadoopFluentConf(args[0]);
-    final HadoopOutput hadoopOutput = new HadoopOutput(hadoopFluentConf);
 
     final UploadClient uploadClient = new HDFSUploadClient();
     uploadClient.init(hadoopFluentConf);
@@ -25,6 +24,8 @@ public class Forward {
     uploader.setDaemon(true);
     uploader.setName("cloud-storage-uploader");
     uploader.start();
+
+    final HadoopOutput hadoopOutput = new HadoopOutput(hadoopFluentConf, uploader);
 
     final ForwardCallback callback = ForwardCallback.of(hadoopOutput::handleEvent);
     final ForwardServer server = new ForwardServer
