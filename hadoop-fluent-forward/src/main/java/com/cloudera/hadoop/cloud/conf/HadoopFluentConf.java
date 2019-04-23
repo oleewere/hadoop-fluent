@@ -83,6 +83,10 @@ public class HadoopFluentConf {
     return clusterName;
   }
 
+  public Integer getPort() {
+    return port;
+  }
+
   public String getConfigAsString(String type, String key, String defaultValue) {
     if (configs.containsKey(type) && configs.get(type).containsKey(key)) {
       return configs.get(type).getProperty(key);

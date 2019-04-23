@@ -30,6 +30,7 @@ public class Forward {
     final ForwardCallback callback = ForwardCallback.of(hadoopOutput::handleEvent);
     final ForwardServer server = new ForwardServer
       .Builder(callback)
+      .localAddress(hadoopFluentConf.getPort())
       .build();
     server.start();
   }
