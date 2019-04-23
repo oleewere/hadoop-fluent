@@ -1,5 +1,6 @@
 package com.cloudera.hadoop.cloud.util;
 
+import com.cloudera.hadoop.cloud.conf.HadoopFluentConf;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -8,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Properties;
 
 public class HDFSUtil {
 
@@ -74,16 +76,17 @@ public class HDFSUtil {
   }
 
   /**
-   * Override Hadoop configuration object based on logfeeder.properties configurations (with keys that starts with "fs." or "hadoop.*")
-   * @param configMap global property holder
+   * Override Hadoop configuration object based on global hadoop fluent configurations (with keys that starts with "fs.")
+   * @param hadoopFluentConf global property holder
    * @param configuration hadoop configuration holder
    */
-  public static void overrideFileSystemConfigs(Map<String, String> configMap, Configuration configuration) {
-    for (Map.Entry<String, String> prop : configMap.entrySet()) {
-      String propertyName = prop.getKey();
+  public static void overrideFileSystemConfigs(final HadoopFluentConf hadoopFluentConf, final Configuration configuration) {
+    Properties properties = hadoopFluentConf.getConfigsByType("hadoop_fs");
+    for (Map.Entry<Object, Object> prop : properties.entrySet()) {
+      String propertyName = prop.getKey().toString();
       if (propertyName.startsWith("fs.")) {
-        logger.info("Override {} configuration (by custom properties)", propertyName);
-        configuration.set(propertyName, prop.getValue());
+        logger.info("Override {} configuration (by [hadoop_fs] config section)", propertyName);
+        configuration.set(propertyName, prop.getValue().toString());
       }
     }
   }

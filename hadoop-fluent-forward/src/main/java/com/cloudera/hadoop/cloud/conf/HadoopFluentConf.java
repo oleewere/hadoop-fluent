@@ -87,6 +87,10 @@ public class HadoopFluentConf {
     return port;
   }
 
+  public Properties getConfigsByType(String type) {
+    return configs.containsKey(type) ? configs.get(type) : new Properties();
+  }
+
   public String getConfigAsString(String type, String key, String defaultValue) {
     if (configs.containsKey(type) && configs.get(type).containsKey(key)) {
       return configs.get(type).getProperty(key);
