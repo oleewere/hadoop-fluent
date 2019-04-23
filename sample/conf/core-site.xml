@@ -1,0 +1,26 @@
+<configuration>
+  <property>
+    <name>fs.defaultFS</name>
+    <value>s3a://hadoop_fluent_test</value>
+  </property>
+  <property>
+    <name>fs.s3a.endpoint</name>
+    <value>http://fakes3:4569</value>
+  </property>
+  <property>
+    <name>fs.s3a.access.key</name>
+    <value>MyAccessKey</value>
+  </property>
+  <property>
+    <name>fs.s3a.secret.key</name>
+    <value>MySecretKey</value>
+  </property>
+  <property>
+    <name>fs.s3a.path.style.access</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>fs.s3a.multiobjectdelete.enable</name>
+    <value>false</value>
+  </property>
+</configuration>

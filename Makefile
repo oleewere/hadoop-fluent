@@ -28,4 +28,9 @@ deb: package
 docker-build: package
 	docker build -t oleewere/hadoop-fluent:latest .
 
+docker-sample:
+	cd sample && ./up.sh
+
+docker-sample-with-build: docker-build docker-sample
+
 all: deb

@@ -1,0 +1,41 @@
+version: '3.3'
+services:
+  hadoop-fluent:
+    image: oleewere/hadoop-fluent:latest
+    hostname: hadoop-fluent
+    container_name: hadoop-fluent
+    networks:
+      - hadoop-fluent-network
+    volumes:
+      - ./conf/hadoop-fluent.conf:/root/hadoop-fluent/conf/hadoop-fluent.conf
+      - ./conf/core-site.xml:/root/hadoop-fluent/conf/core-site.xml
+    ports:
+      - "5005:5005"
+    environment:
+      - HADOOP_FLUENT_DEBUG=true
+      - HADOOP_FLUENT_DEBUG_SUSPEND=n
+    command: ["-t", "s3", "-s", "/root/hadoop-fluent/conf"]
+  fluentd:
+    image: fluent/fluentd:v1.4-debian
+    hostname: fluentd
+    container_name: fluentd
+    networks:
+      - hadoop-fluent-network
+    volumes:
+      - ./conf/fluent.conf:/fluentd/etc/fluent.conf
+  fakes3:
+    image: localstack/localstack
+    hostname: fakes3
+    container_name: fakes3
+    ports:
+      - "4569:4569"
+    environment:
+      - SERVICES=s3:4569
+      - DEBUG=s3
+    networks:
+      hadoop-fluent-network:
+        aliases:
+          - testbucket.fakes3
+networks:
+  hadoop-fluent-network:
+    driver: bridge
