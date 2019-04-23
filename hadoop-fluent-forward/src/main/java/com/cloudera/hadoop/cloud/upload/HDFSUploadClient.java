@@ -1,12 +1,12 @@
 package com.cloudera.hadoop.cloud.upload;
 
+import com.cloudera.hadoop.cloud.conf.HadoopFluentConf;
 import com.cloudera.hadoop.cloud.util.HDFSUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class HDFSUploadClient implements UploadClient {
@@ -16,7 +16,7 @@ public class HDFSUploadClient implements UploadClient {
   private final AtomicReference<Configuration> configurationRef = new AtomicReference<>();
 
   @Override
-  public void init(final Map<String, String> configs) {
+  public void init(final HadoopFluentConf hadoopFluentConf) {
     logger.info("Initialize HDFS Upload Client ...");
     final Configuration configuration = new Configuration();
     configurationRef.set(configuration);

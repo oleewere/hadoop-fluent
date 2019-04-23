@@ -2,6 +2,9 @@ package com.cloudera.hadoop.cloud;
 
 import com.cloudera.hadoop.cloud.conf.HadoopFluentConf;
 import com.cloudera.hadoop.cloud.output.HadoopOutput;
+import com.cloudera.hadoop.cloud.upload.CloudStorageUploader;
+import com.cloudera.hadoop.cloud.upload.HDFSUploadClient;
+import com.cloudera.hadoop.cloud.upload.UploadClient;
 import influent.forward.ForwardCallback;
 import influent.forward.ForwardServer;
 
@@ -14,6 +17,14 @@ public class Forward {
 
     final HadoopFluentConf hadoopFluentConf = new HadoopFluentConf(args[0]);
     final HadoopOutput hadoopOutput = new HadoopOutput(hadoopFluentConf);
+
+    final UploadClient uploadClient = new HDFSUploadClient();
+    uploadClient.init(hadoopFluentConf);
+
+    final CloudStorageUploader uploader = new CloudStorageUploader(uploadClient, hadoopFluentConf);
+    uploader.setDaemon(true);
+    uploader.setName("cloud-storage-uploader");
+    uploader.start();
 
     final ForwardCallback callback = ForwardCallback.of(hadoopOutput::handleEvent);
     final ForwardServer server = new ForwardServer

@@ -1,15 +1,16 @@
 package com.cloudera.hadoop.cloud.upload;
 
+import com.cloudera.hadoop.cloud.conf.HadoopFluentConf;
+
 import java.io.Closeable;
-import java.util.Map;
 
 public interface UploadClient extends Closeable {
 
   /**
    * Initialize the client
-   * @param configs key/value map that holds configurations for the uploader client
+   * @param hadoopFluentConf holds configurations for the uploader client
    */
-  void init(Map<String, String> configs);
+  void init(HadoopFluentConf hadoopFluentConf);
 
   /**
    * Upload source file to cloud storage location
