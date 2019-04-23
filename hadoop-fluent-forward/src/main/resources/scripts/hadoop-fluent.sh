@@ -29,16 +29,30 @@ if [ -x $JAVA_HOME/bin/java ]; then
   JVM=$JAVA_HOME/bin/java
 fi
 
-if [[ -z "$HADOOP_FLUENT_CONF" ]]; then
-  HADOOP_FLUENT_CONF="$HADOOP_FLUENT_ROOT_DIR/conf/hadoop-fluent.conf"
+java_version=$($JVM -version 2>&1 | grep 'version' | cut -d'"' -f2 | cut -d'.' -f2)
+
+if [[ -z "$HADOOP_FLUENT_CONF_FILE" ]]; then
+  HADOOP_FLUENT_CONF_FILE="$HADOOP_FLUENT_ROOT_DIR/conf/hadoop-fluent.conf"
 fi
 
 function run_app() {
   local sdk_type=$1
   local core_site_folder=$2
 
-  $JVM -classpath "$HADOOP_FLUENT_ROOT_DIR/libs/core/*:/$HADOOP_FLUENT_ROOT_DIR/libs/$sdk_type/*:$core_site_folder" \
-    com.cloudera.hadoop.cloud.Forward "$HADOOP_FLUENT_CONF"
+  HADOOP_FLUENT_DEBUG_SUSPEND=${HADOOP_FLUENT_DEBUG_SUSPEND:-n}
+  HADOOP_FLUENT_DEBUG_PORT=${HADOOP_FLUENT_DEBUG_PORT:-"5005"}
+
+  if [ "$HADOOP_FLUENT_DEBUG" = "true" ]; then
+    if [ $java_version == "8" ]; then
+      HADOOP_FLUENT_DEBUG_ADDRESS=$HADOOP_FLUENT_DEBUG_PORT
+    else
+      HADOOP_FLUENT_DEBUG_ADDRESS="*:$HADOOP_FLUENT_DEBUG_PORT"
+    fi
+    HADOOP_FLUENT_JAVA_OPTS="$HADOOP_FLUENT_JAVA_OPTS -Xdebug -Xrunjdwp:transport=dt_socket,address=$HADOOP_FLUENT_DEBUG_ADDRESS,server=y,suspend=$HADOOP_FLUENT_DEBUG_SUSPEND "
+  fi
+
+  $JVM -classpath "$HADOOP_FLUENT_ROOT_DIR/libs/core/*:/$HADOOP_FLUENT_ROOT_DIR/libs/$sdk_type/*:$HADOOP_FLUENT_ROOT_DIR/conf:$core_site_folder" \
+    $HADOOP_FLUENT_JAVA_OPTS com.cloudera.hadoop.cloud.Forward "$HADOOP_FLUENT_CONF_FILE"
 }
 
 function main() {
@@ -50,7 +64,7 @@ function main() {
           local STORAGE_TYPE="$2"
           shift 2
      ;;
-    -c|--core-site-folder)
+    -s|--core-site-folder)
           local CORE_SITE_FOLDER="$2"
           shift 2
     ;;
