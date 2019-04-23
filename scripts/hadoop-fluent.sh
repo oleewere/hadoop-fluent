@@ -2,10 +2,9 @@
 
 function print_help() {
   cat << EOF
-   Usage: hadoop-client.sh --type <STORAGE_TYPE> --path <PATH> [additional options]
+   Usage: hadoop-fluent.sh --type <STORAGE_TYPE> --path <PATH> [additional options]
 
    -t, --type  <STORAGE_TYPE>                      available storage types: s3 | gcs | wasb | adlsv2 | hdfs
-   -p, --path  <PATH>                              source path where data will be uploaded from to cloud storage
    -c, --core-site-folder <CORE_SITE_FOLDER_PATH>  core-site.xml path
    -h, --help                                      print help
 EOF
@@ -20,8 +19,8 @@ function main() {
           local STORAGE_TYPE="$2"
           shift 2
      ;;
-    -p|--path)
-          local UPLOAD_PATH="$2"
+    -c|--core-site-folder)
+          local CORE_SITE_FOLDER="$2"
           shift 2
     ;;
     -h|--help)
@@ -42,8 +41,8 @@ function main() {
     exit 1
   fi
 
-  if [[ -z "$UPLOAD_PATH" ]] ; then
-    echo "path argument is required (-p or --path)."
+  if [[ -z "$CORE_SITE_FOLDER" ]] ; then
+    echo "path argument is required (-c or --core-site-folder)."
     print_help
     exit 1
   fi

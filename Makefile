@@ -25,4 +25,7 @@ rpm: package
 deb: package
 	./gradlew deb
 
+docker-build: package
+	docker build -t oleewere/hadoop-fluent:latest .
+
 all: deb

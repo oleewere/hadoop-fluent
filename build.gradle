@@ -79,7 +79,7 @@ task processHadoopClients(type:Copy) {
     into { "libs/wasb" }
   }
   with copySpec {
-    from "${projectDir}/scripts/hadoop-client.sh"
+    from "${projectDir}/scripts/hadoop-fluent.sh"
     into { "bin/" }
   }
 }
