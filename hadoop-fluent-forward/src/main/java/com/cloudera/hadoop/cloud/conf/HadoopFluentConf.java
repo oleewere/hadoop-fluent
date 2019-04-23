@@ -40,6 +40,7 @@ public class HadoopFluentConf {
   private final BufferConf bufferConf;
   private final UploaderConf uploaderConf;
   private final String clusterName;
+  private final String clusterType;
   private final Integer port;
 
   public HadoopFluentConf(String iniFilePath) {
@@ -50,6 +51,7 @@ public class HadoopFluentConf {
       System.exit(1);
     }
     this.clusterName = getConfigAsString("server", "cluster", "cl1");
+    this.clusterType = getConfigAsString("server", "cluster_type", "");
     this.port = getConfigAsInteger("server", "forward_port", 24224);
     this.bufferConf = new BufferConf.Builder()
       .withRolloverArchiveBaseDir(getConfigAsString("buffer", "rollover_archive_base_dir", "/var/lib/hadoop-fluent/data"))
@@ -72,19 +74,23 @@ public class HadoopFluentConf {
   }
 
   public BufferConf getBufferConf() {
-    return bufferConf;
+    return this.bufferConf;
   }
 
   public UploaderConf getUploaderConf() {
-    return uploaderConf;
+    return this.uploaderConf;
   }
 
   public String getClusterName() {
-    return clusterName;
+    return this.clusterName;
+  }
+
+  public String getClusterType() {
+    return this.clusterType;
   }
 
   public Integer getPort() {
-    return port;
+    return this.port;
   }
 
   public Properties getConfigsByType(String type) {

@@ -53,8 +53,8 @@ public class CloudStorageUploader extends Thread {
    */
   public void doUpload(int timeout) {
     try {
-      final File archiveLogDir = Paths.get(hadoopFluentConf.getBufferConf().getRolloverArchiveBaseDir(),
-        hadoopFluentConf.getClusterName(), HadoopFluentConf.hostName, "archived").toFile();
+      final File archiveLogDir = Paths.get(
+        hadoopFluentConf.getBufferConf().getRolloverArchiveBaseDir(), hadoopFluentConf.getClusterType(), hadoopFluentConf.getClusterName(), HadoopFluentConf.hostName, "archived").toFile();
       if (archiveLogDir.exists()) {
         String[] extensions = {"log", "json", "gz"};
         Collection<File> filesToUpload = FileUtils.listFiles(archiveLogDir, extensions, true);
@@ -63,7 +63,7 @@ public class CloudStorageUploader extends Thread {
         } else {
           for (File file : filesToUpload) {
             final String outputPath = generateOutputPath(hadoopFluentConf.getUploaderConf().getBasePath(),
-              hadoopFluentConf.getClusterName(), HadoopFluentConf.hostName, file);
+              hadoopFluentConf.getClusterType(), hadoopFluentConf.getClusterName(), HadoopFluentConf.hostName, file);
             logger.info("Upload will start: input: {}, output: {}", file.getAbsolutePath(), outputPath);
             Future<?> future = executorService.submit(() -> {
               try {
@@ -86,8 +86,9 @@ public class CloudStorageUploader extends Thread {
   }
 
   @VisibleForTesting
-  String generateOutputPath(String basePath, String clusterName, String hostName, File localFile) {
-    final String outputWithoutBasePath = Paths.get(clusterName, hostName, localFile.getParentFile().getName(), localFile.getName()).toString();
+  String generateOutputPath(String basePath, String clusterType, String clusterName, String hostName, File localFile) {
+    final String outputWithoutBasePath = Paths.get(clusterType, clusterName, hostName,
+      localFile.getParentFile().getName(), localFile.getName()).toString();
     final String outputPath;
     if (StringUtils.isNotEmpty(basePath)) {
       if (!basePath.endsWith("/")){
