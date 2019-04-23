@@ -66,6 +66,7 @@ public class LogFileBufferFactory {
 
     DefaultRolloverStrategy defaultRolloverStrategy = DefaultRolloverStrategy.newBuilder()
       .withMax(String.valueOf(conf.getRolloverMaxBackupFiles()))
+      .withConfig(config)
       .build();
 
     boolean immediateFlush = conf.isImmediateFlush();
