@@ -11,6 +11,7 @@ public class BufferConf {
   private final boolean rolloverOnStartup;
   private final boolean rolloverOnShutdown;
   private final boolean immediateFlush;
+  private final boolean asyncLogProcess;
 
   private BufferConf(Builder builder) {
     rolloverSizeFormat = builder.rolloverSizeFormat;
@@ -22,6 +23,7 @@ public class BufferConf {
     rolloverOnStartup = builder.rolloverOnStartup;
     rolloverOnShutdown = builder.rolloverOnShutdown;
     immediateFlush = builder.immediateFlush;
+    asyncLogProcess = builder.asyncLogProcess;
   }
 
   public String getRolloverArchiveBaseDir() {
@@ -60,6 +62,10 @@ public class BufferConf {
     return this.immediateFlush;
   }
 
+  public boolean isAsyncLogProcess() {
+    return asyncLogProcess;
+  }
+
   public static class Builder {
     private String rolloverSizeFormat;
     private String rolloverArchiveBaseDir;
@@ -70,6 +76,7 @@ public class BufferConf {
     private boolean rolloverOnStartup;
     private boolean rolloverOnShutdown;
     private boolean immediateFlush;
+    private boolean asyncLogProcess;
 
     public Builder withRolloverSizeFormat(String rolloverSizeFormat){
       this.rolloverSizeFormat = rolloverSizeFormat;
@@ -113,6 +120,11 @@ public class BufferConf {
 
     public Builder withImmediateFlush(boolean immediateFlush){
       this.immediateFlush = immediateFlush;
+      return this;
+    }
+
+    public Builder withAsyncLogProcess(boolean asyncLogProcess) {
+      this.asyncLogProcess = asyncLogProcess;
       return this;
     }
 

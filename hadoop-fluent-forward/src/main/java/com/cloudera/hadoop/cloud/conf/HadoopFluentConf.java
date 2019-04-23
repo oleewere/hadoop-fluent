@@ -61,6 +61,7 @@ public class HadoopFluentConf {
       .withRolloverOnShutdown(getConfigAsBoolean("buffer", "rollover_on_shutdown", true))
       .withRolloverOnStartup(getConfigAsBoolean("buffer", "rollover_on_startup", true))
       .withUseGzip(getConfigAsBoolean("buffer", "use_gzip", true))
+      .withAsyncLogProcess(getConfigAsBoolean("buffer", "async_log_process", false))
       .build();
     this.uploaderConf = new UploaderConf(
       "",

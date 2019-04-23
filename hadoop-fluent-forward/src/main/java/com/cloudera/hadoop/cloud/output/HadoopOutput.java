@@ -27,21 +27,29 @@ public class HadoopOutput {
     loggerContext = (LoggerContext) LogManager.getContext(false);
   }
 
-  public synchronized CompletableFuture<Void> handleEvent(EventStream stream) {
+  public CompletableFuture<Void> handleEvent(EventStream stream) {
     Tag tag = stream.getTag();
     String tagName = tag.getName();
-    if (!logOutputs.containsKey(tagName)) {
-      logger.info("New tag found: {} ... Creating a new logger.", tagName);
-      final Logger newLogger = LogFileBufferFactory.createLogger(tagName, loggerContext, hadoopFluentConf);
-      logOutputs.put(tagName, newLogger);
+    synchronized(this) {
+      if (!logOutputs.containsKey(tagName)) {
+        logger.info("New tag found: {} ... Creating a new logger.", tagName);
+        final Logger newLogger = LogFileBufferFactory.createLogger(tagName, loggerContext, hadoopFluentConf);
+        logOutputs.put(tagName, newLogger);
+      }
     }
-    return write(logOutputs.get(tagName), stream.getEntries());
+    if (hadoopFluentConf.getBufferConf().isAsyncLogProcess()) {
+      return CompletableFuture.runAsync(() -> {
+        write(logOutputs.get(tagName), stream.getEntries());
+      });
+    } else {
+      write(logOutputs.get(tagName), stream.getEntries());
+      return CompletableFuture.completedFuture(null);
+    }
   }
 
-  private CompletableFuture<Void> write(Logger logger, List<EventEntry> entries) {
+  private void write(final Logger logger, final List<EventEntry> entries) {
     for (EventEntry eventEntry : entries) {
       logger.info(eventEntry.getRecord());
     }
-    return CompletableFuture.completedFuture(null);
   }
 }
