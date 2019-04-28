@@ -20,6 +20,7 @@ import optparse
 import os
 import subprocess
 import sys
+import time
 import ConfigParser
 
 dirname=os.path.dirname
@@ -46,6 +47,11 @@ def validate(options, parser):
     error(parser, 'Storage type paramter is required (use -s or --storage-type)')
 
 def start(options):
+  _, hadoop_fluent_exists = hadoop_fluent_process_exists(options)
+  if hadoop_fluent_exists:
+    print "hadoop-fluent application is already running."
+    return
+  
   storage_libs_path = os.path.join(libs_folder, options.storage_type)
   conf_folder = _conf_folder(options)
   classpath = "{0}/core/*:{1}/*:{2}:{3}".format(libs_folder, storage_libs_path, conf_folder, _core_site_folder(options))
@@ -55,11 +61,23 @@ def start(options):
   print "Start process with the following command: {0}".format(start_command)
   start_cmd(start_command, options)
 
+  if not options.foreground:
+    print "Waiting a few seconds until hadoop-fluent is started ..."
+    time.sleep(5)
+
+    pid = get_hadoop_fluent_pid_by_ps_grep()
+    if is_str_not_empty(pid):
+      print "hadoop-fluent application has started with pid: {0}.".format(pid)
+      return
+    else:
+      print "hadoop-fluent application start failed."
+      if os.path.exists(pidfile_path):
+        os.remove(pidfile_path)
+      sys.exit(1)
+
 def start_cmd(command, options):
   pid_file = os.path.join(_pid_dir(options), "hadoop_fluent.pid")
   if options.foreground:
-    pid = os.getpid()
-    print pid
     os.system(command)
   else:
     os.system("nohup {0} >/dev/null 2>&1 & echo $! > {1}".format(command, pid_file))
@@ -130,7 +148,22 @@ def stop(options):
   if hadoop_fluent_exists:
     print "hadoop-fluent is running with pid {0}. Wait for stopping ...".format(pid)
     run_command("kill {0}".format(pid))
-    # todo check process until it's stopped
+    
+    def check_process_is_stopped(max_tries = 30, sleep = 5):
+      tries = 0
+      while tries <= max_tries:
+        pid = get_hadoop_fluent_pid_by_ps_grep()
+        if is_str_not_empty(pid):
+          tries = tries + 1
+          sys.stdout.write(".")
+          sys.stdout.flush()
+          time.sleep(sleep)
+        else:
+          return
+      print "\nhadoop-fluent could not be stopped after in time. (After {0} tries)".format(max_tries)
+      sys.exit(1)
+    check_process_is_stopped(30, 5)
+    print "hadoop-fluent application is stopped."
   else:
     print "hadoop-fluent application is not running, nothing to stop."
   pidfile_path = os.path.join(_pid_dir(options), "hadoop_fluent.pid")
@@ -149,7 +182,7 @@ def error(parser, message):
 if __name__=="__main__":
   parser = optparse.OptionParser("usage: %prog [options]")
   parser.add_option("-A", "--action", dest="action", type="string", help="action: start | stop | restart | status")
-  parser.add_option("-s", "--storage-type", dest="storage_type", type="string", help="storage type: s3 | abfs | wasb | gcs | hdfs")
+  parser.add_option("-t", "--storage-type", dest="storage_type", type="string", help="storage type: s3 | abfs | wasb | gcs | hdfs")
   parser.add_option("-H", "--hadoop-conf", dest="hadoop_conf", type="string", help="hadoop conf folder that contains the core-site.xml file")
   parser.add_option("-c", "--conf", dest="conf", type="string", help="custom path for the hadoop-fluent configuration file")
   parser.add_option("-j", "--java-home", dest="java_home", type="string", help="Java home that is used for hadoop-fluent java application")
