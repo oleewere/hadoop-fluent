@@ -3,7 +3,6 @@ package com.cloudera.hadoop.cloud.conf;
 public class BufferConf {
 
   private final String rolloverSizeFormat;
-  private final String rolloverArchiveBaseDir;
   private final Integer rolloverSize;
   private final Integer rolloverThresholdTimeMins;
   private final Integer rolloverMaxBackupFiles;
@@ -15,7 +14,6 @@ public class BufferConf {
 
   private BufferConf(Builder builder) {
     rolloverSizeFormat = builder.rolloverSizeFormat;
-    rolloverArchiveBaseDir = builder.rolloverArchiveBaseDir;
     rolloverSize = builder.rolloverSize;
     rolloverThresholdTimeMins = builder.rolloverThresholdTimeMins;
     rolloverMaxBackupFiles = builder.rolloverMaxBackupFiles;
@@ -24,10 +22,6 @@ public class BufferConf {
     rolloverOnShutdown = builder.rolloverOnShutdown;
     immediateFlush = builder.immediateFlush;
     asyncLogProcess = builder.asyncLogProcess;
-  }
-
-  public String getRolloverArchiveBaseDir() {
-    return this.rolloverArchiveBaseDir;
   }
 
   public boolean isUseGzip() {
@@ -68,7 +62,6 @@ public class BufferConf {
 
   public static class Builder {
     private String rolloverSizeFormat;
-    private String rolloverArchiveBaseDir;
     private Integer rolloverSize;
     private Integer rolloverThresholdTimeMins;
     private Integer rolloverMaxBackupFiles;
@@ -80,11 +73,6 @@ public class BufferConf {
 
     public Builder withRolloverSizeFormat(String rolloverSizeFormat){
       this.rolloverSizeFormat = rolloverSizeFormat;
-      return this;
-    }
-
-    public Builder withRolloverArchiveBaseDir(String rolloverArchiveBaseDir){
-      this.rolloverArchiveBaseDir = rolloverArchiveBaseDir;
       return this;
     }
 

@@ -28,7 +28,7 @@ public class LogFileBufferFactory {
   public static Logger createLogger(String tag, LoggerContext loggerContext, HadoopFluentConf fluentConf) {
     Configuration config = loggerContext.getConfiguration();
     BufferConf conf = fluentConf.getBufferConf();
-    String baseDir = conf.getRolloverArchiveBaseDir();
+    String baseDir = fluentConf.getArchiveBaseDir();
     String clusterHostnameBaseDir = Paths.get(baseDir, fluentConf.getClusterType(), fluentConf.getClusterName(),
       HadoopFluentConf.hostName).toFile().getAbsolutePath();
     String activeLogDir = Paths.get(clusterHostnameBaseDir, ACTIVE_FOLDER, tag).toFile().getAbsolutePath();

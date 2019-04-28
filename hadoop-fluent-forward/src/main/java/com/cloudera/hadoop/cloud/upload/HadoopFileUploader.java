@@ -58,7 +58,7 @@ public class HadoopFileUploader extends Thread {
   public void doUpload(int timeout) {
     try {
       final File archiveLogDir = Paths.get(
-        hadoopFluentConf.getBufferConf().getRolloverArchiveBaseDir(), hadoopFluentConf.getClusterType(), hadoopFluentConf.getClusterName(), HadoopFluentConf.hostName, "archived").toFile();
+        hadoopFluentConf.getArchiveBaseDir(), hadoopFluentConf.getClusterType(), hadoopFluentConf.getClusterName(), HadoopFluentConf.hostName, "archived").toFile();
       if (archiveLogDir.exists()) {
         String[] extensions = {"log", "json", "gz"};
         Collection<File> filesToUpload = FileUtils.listFiles(archiveLogDir, extensions, true);

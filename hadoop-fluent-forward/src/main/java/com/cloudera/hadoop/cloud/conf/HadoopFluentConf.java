@@ -43,6 +43,7 @@ public class HadoopFluentConf {
   private final String clusterType;
   private final Integer port;
   private final String mode;
+  private final String archiveBaseDir;
 
   public HadoopFluentConf(String iniFilePath) {
     try (final FileReader reader = new FileReader(iniFilePath)) {
@@ -55,6 +56,7 @@ public class HadoopFluentConf {
     this.clusterName = getConfigAsString("global", "cluster", "cl1");
     this.clusterType = getConfigAsString("global", "cluster_type", "");
     this.port = getConfigAsInteger("global", "forward_port", 24224);
+    this.archiveBaseDir = getConfigAsString("global", "archive_base_dir", "/var/lib/hadoop-fluent/data");
     this.uploaderConf = new UploaderConf(
       "",
       getConfigAsInteger("uploader", "timeout_mins", 10),
@@ -62,7 +64,6 @@ public class HadoopFluentConf {
       getConfigAsBoolean("uploader", "upload_on_shutdown", true)
       );
     this.bufferConf = new BufferConf.Builder()
-      .withRolloverArchiveBaseDir(getConfigAsString("buffer", "rollover_archive_base_dir", "/var/lib/hadoop-fluent/data"))
       .withRolloverSize(getConfigAsInteger("buffer", "rollover_size", 256))
       .withRolloverSizeFormat(getConfigAsString("buffer", "rollover_size_format", "MB"))
       .withRolloverThresholdTimeMins(getConfigAsInteger("buffer", "rollover_threshold_time_mins", 5))
@@ -92,7 +93,11 @@ public class HadoopFluentConf {
   }
 
   public String getMode() {
-    return mode;
+    return this.mode;
+  }
+
+  public String getArchiveBaseDir() {
+    return this.archiveBaseDir;
   }
 
   public Integer getPort() {
