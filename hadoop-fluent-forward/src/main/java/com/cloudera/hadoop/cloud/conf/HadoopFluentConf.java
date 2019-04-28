@@ -103,21 +103,33 @@ public class HadoopFluentConf {
     return configs.containsKey(type) ? configs.get(type) : new Properties();
   }
 
-  public String getConfigAsString(String type, String key, String defaultValue) {
+  private String getConfigAsString(String type, String key, String defaultValue) {
+    String sysProperty = System.getProperty(String.format("hadoop.fluent.%s.%s", type, key));
+    if (sysProperty != null && !sysProperty.isEmpty()) {
+      return sysProperty;
+    }
     if (configs.containsKey(type) && configs.get(type).containsKey(key)) {
       return configs.get(type).getProperty(key);
     }
     return defaultValue;
   }
 
-  public int getConfigAsInteger(String type, String key, Integer defaultValue) {
+  private int getConfigAsInteger(String type, String key, Integer defaultValue) {
+    String sysProperty = System.getProperty(String.format("hadoop.fluent.%s.%s", type, key));
+    if (sysProperty != null && !sysProperty.isEmpty()) {
+      return Integer.parseInt(sysProperty);
+    }
     if (configs.containsKey(type) && configs.get(type).containsKey(key)) {
       return Integer.parseInt(configs.get(type).getProperty(key));
     }
     return defaultValue;
   }
 
-  public boolean getConfigAsBoolean(String type, String key, Boolean defaultValue) {
+  private boolean getConfigAsBoolean(String type, String key, Boolean defaultValue) {
+    String sysProperty = System.getProperty(String.format("hadoop.fluent.%s.%s", type, key));
+    if (sysProperty != null && !sysProperty.isEmpty()) {
+      return Boolean.parseBoolean(sysProperty);
+    }
     if (configs.containsKey(type) && configs.get(type).containsKey(key)) {
       return Boolean.parseBoolean(configs.get(type).getProperty(key));
     }
