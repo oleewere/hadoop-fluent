@@ -14,7 +14,7 @@ services:
     environment:
       - HADOOP_FLUENT_DEBUG=true
       - HADOOP_FLUENT_DEBUG_SUSPEND=y
-    command: ["-t", "s3", "-s", "/root/hadoop-fluent/conf"]
+    command: ["start", "-t", "s3", "-s"]
   fluentd:
     image: fluent/fluentd:v1.4-debian
     hostname: fluentd
