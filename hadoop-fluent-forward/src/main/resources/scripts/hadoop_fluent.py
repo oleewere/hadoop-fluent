@@ -48,7 +48,7 @@ def start(options):
   storage_libs_path = os.path.join(libs_folder, options.storage_type)
   conf_folder = _conf_folder(options)
   classpath = "{0}/core/*:{1}/*:{2}:{3}".format(libs_folder, storage_libs_path, conf_folder, _core_site_folder(options))
-  java_opts = ""
+  java_opts = "-Dhadoop.fluent.app.name=hadoop-fluent {0}".format(options.extra_java_opts) if options.extra_java_opts else "-Dhadoop.fluent.app.name=hadoop-fluent"
   conf_file = os.path.join(conf_folder, "hadoop-fluent.conf")
   start_command = '{0} -classpath "{1}" {2} com.cloudera.hadoop.cloud.Main {3}'.format(_java_bin(options), classpath, java_opts, conf_file)
   print "Start process with the following command: {0}".format(start_command)
@@ -75,8 +75,9 @@ if __name__=="__main__":
   parser.add_option("-H", "--hadoop-conf", dest="hadoop_conf", type="string", help="hadoop conf folder that contains the core-site.xml file")
   parser.add_option("-c", "--conf", dest="conf", type="string", help="custom path for the hadoop-fluent configuration file")
   parser.add_option("-j", "--java-home", dest="java_home", type="string", help="Java home that is used for hadoop-fluent java application")
+  parser.add_option("-o", "--extra-java-opts", dest="extra_java_opts", type="string", help="Additional java options for hadoop-fluent java application")
   parser.add_option("-p", "--pid-dir", dest="pid_dir", type="string", help="Pid directory for hadoop-fluent java application.")
-  parser.add_option("-f", "--foreground", dest="foreground", type="string", help="Run application in foreground.")
+  parser.add_option("-f", "--foreground", dest="foreground", action="store_true", help="Run application in foreground.")
   parser.add_option("--fluentd-agent", dest="use_fluentd_agent", action="store_true", help="manage fluentd agent application")
   parser.add_option("--td-agent", dest="use_td_agent", action="store_true", help="manage td agent application")
   parser.add_option("-v", "--verbose", dest="verbose", action="store_true", help="use for verbose logging")
