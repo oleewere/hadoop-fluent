@@ -44,7 +44,7 @@ def _pid_dir(options):
 
 def validate(options, parser):
   if not options.storage_type:
-    error(parser, 'Storage type paramter is required (use -s or --storage-type)')
+    error(parser, 'Storage type paramter is required (use -t or --storage-type)')
 
 def start(options):
   _, hadoop_fluent_exists = hadoop_fluent_process_exists(options)
@@ -55,7 +55,10 @@ def start(options):
   storage_libs_path = os.path.join(libs_folder, options.storage_type)
   conf_folder = _conf_folder(options)
   classpath = "{0}/core/*:{1}/*:{2}:{3}".format(libs_folder, storage_libs_path, conf_folder, _core_site_folder(options))
-  java_opts = "-Dhadoop.fluent.app.name=hadoop-fluent {0}".format(options.extra_java_opts) if options.extra_java_opts else "-Dhadoop.fluent.app.name=hadoop-fluent"
+  java_opts = "-Dhadoop.fluent.app.name=hadoop-fluent"
+  if options.server:
+    java_opts = "{0} -Dhadoop.fluent.global.mode=server".format(java_opts)
+  java_opts = "{0} {1}".format(java_opts, options.extra_java_opts) if options.extra_java_opts else "{0}".format(java_opts)
   conf_file = os.path.join(conf_folder, "hadoop-fluent.conf")
   start_command = '{0} -classpath "{1}" {2} com.cloudera.hadoop.cloud.Main {3}'.format(_java_bin(options), classpath, java_opts, conf_file)
   print "Start process with the following command: {0}".format(start_command)
@@ -182,6 +185,7 @@ def error(parser, message):
 if __name__=="__main__":
   parser = optparse.OptionParser("usage: %prog [options]")
   parser.add_option("-A", "--action", dest="action", type="string", help="action: start | stop | restart | status")
+  parser.add_option("-s", "--server", dest="server", action="store_true", help="Run hadoop-fluent application with forwarder input")
   parser.add_option("-t", "--storage-type", dest="storage_type", type="string", help="storage type: s3 | abfs | wasb | gcs | hdfs")
   parser.add_option("-H", "--hadoop-conf", dest="hadoop_conf", type="string", help="hadoop conf folder that contains the core-site.xml file")
   parser.add_option("-c", "--conf", dest="conf", type="string", help="custom path for the hadoop-fluent configuration file")
