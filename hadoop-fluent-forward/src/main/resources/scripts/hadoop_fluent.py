@@ -63,6 +63,68 @@ def start_cmd(command, options):
   else:
     os.system("nohup {0} >/dev/null 2>&1 & echo $! > {1}".format(command, pid_file))
 
+def hadoop_fluent_process_exists(options):
+  pidfile_path = os.path.join(_pid_dir(options), "hadoop_fluent.pid")
+  if os.path.exists(pidfile_path):
+    _, _, pid_resp = run_command("cat {0}".format(pidfile_path))
+    if pid_resp:
+      pid = pid_resp.split('\n', 1)[0]
+      _, ret, _ = run_command("kill -0 {0}".format(pid))
+      if ret == 0:
+        return True
+      else:
+        return check_pid_with_ps(options, pidfile_path, pid)
+    else:
+      return check_pid_with_ps(options, pidfile_path)
+  else:
+    return check_pid_with_ps(options, pidfile_path)
+
+def get_hadoop_fluent_pid_by_ps_grep():
+  p1 = subprocess.Popen(('ps', '-A'), stdout=subprocess.PIPE)
+  p2 = subprocess.Popen(('grep', "hadoop.fluent.app.name"), stdin=p1.stdout, stdout=subprocess.PIPE)
+  p3 = subprocess.Popen(('grep', "-v", "grep"), stdin=p2.stdout, stdout=subprocess.PIPE)
+  p4 = subprocess.Popen(('awk', '{print $1}'), stdin=p3.stdout, stdout=subprocess.PIPE)
+  p1.wait()
+  p2.wait()
+  p3.wait()
+  p4.wait()
+  pid = p4.stdout.read()
+  return pid.strip()
+
+def check_pid_with_ps(options, pidfile_path, wrong_pid=None):
+  pid = get_hadoop_fluent_pid_by_ps_grep()
+  if is_str_not_empty(pid):
+    if wrong_pid:
+      print "Pid file {0} contains wrong pid: {1}".format(pidfile_path, wrong_pid)
+      os.remove(pidfile_path)
+    print "Found existing pid file for hadoop-fluent application. Creating a new one with pid {0}.".format(pid)
+    with open(pidfile_path,'w') as f:
+      f.write(pid)
+    return True
+  else:
+    return False
+
+
+def is_str_not_empty(str):
+  if str and (not str.isspace()):
+    return True
+  else:
+    return False
+
+def run_command(command):
+  p = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+  out, err = p.communicate()
+  return_code = p.returncode
+  return p, return_code, out
+
+def status(options):
+  hadoop_fluent_exists = hadoop_fluent_process_exists(options)
+  if hadoop_fluent_exists:
+    print "hadoop-fluent appliaction is running."
+  else:
+    print "hadoop-fluent appliaction is not running."
+    sys.exit(1)
+
 def error(parser, message):
   print message
   parser.print_help()
@@ -92,6 +154,7 @@ if __name__=="__main__":
   elif options.action == "restart":
     pass
   elif options.action == "status":
+    status(options)
     pass
   elif options.action is None:
     error(parser, "Parameter 'action' is missing!")
