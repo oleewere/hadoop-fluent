@@ -13,7 +13,7 @@ services:
       - "5005:5005"
     environment:
       - HADOOP_FLUENT_DEBUG=true
-      - HADOOP_FLUENT_DEBUG_SUSPEND=n
+      - HADOOP_FLUENT_DEBUG_SUSPEND=y
     command: ["-t", "s3", "-s", "/root/hadoop-fluent/conf"]
   fluentd:
     image: fluent/fluentd:v1.4-debian

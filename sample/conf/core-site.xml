@@ -1,7 +1,7 @@
 <configuration>
   <property>
     <name>fs.defaultFS</name>
-    <value>s3a://hadoop_fluent_test</value>
+    <value>s3a://hadoop_fluent_test/</value>
   </property>
   <property>
     <name>fs.s3a.endpoint</name>
@@ -22,5 +22,9 @@
   <property>
     <name>fs.s3a.multiobjectdelete.enable</name>
     <value>false</value>
+  </property>
+  <property>
+    <name>fs.s3a.impl.disable.cache</name>
+    <value>true</value>
   </property>
 </configuration>

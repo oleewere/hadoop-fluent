@@ -41,8 +41,9 @@ def _core_site_folder(options):
 def _pid_dir(options):
   return options.pid_dir if options.pid_dir else root_folder
 
-def validate(options):
-  pass
+def validate(options, parser):
+  if not options.storage_type:
+    error(parser, 'Storage type paramter is required (use -s or --storage-type)')
 
 def start(options):
   storage_libs_path = os.path.join(libs_folder, options.storage_type)
@@ -71,7 +72,7 @@ def hadoop_fluent_process_exists(options):
       pid = pid_resp.split('\n', 1)[0]
       _, ret, _ = run_command("kill -0 {0}".format(pid))
       if ret == 0:
-        return True
+        return pid, True
       else:
         return check_pid_with_ps(options, pidfile_path, pid)
     else:
@@ -100,10 +101,9 @@ def check_pid_with_ps(options, pidfile_path, wrong_pid=None):
     print "Found existing pid file for hadoop-fluent application. Creating a new one with pid {0}.".format(pid)
     with open(pidfile_path,'w') as f:
       f.write(pid)
-    return True
+    return pid, True
   else:
-    return False
-
+    return None, False
 
 def is_str_not_empty(str):
   if str and (not str.isspace()):
@@ -118,12 +118,28 @@ def run_command(command):
   return p, return_code, out
 
 def status(options):
-  hadoop_fluent_exists = hadoop_fluent_process_exists(options)
+  _, hadoop_fluent_exists = hadoop_fluent_process_exists(options)
   if hadoop_fluent_exists:
     print "hadoop-fluent appliaction is running."
   else:
     print "hadoop-fluent appliaction is not running."
     sys.exit(1)
+
+def stop(options):
+  pid, hadoop_fluent_exists = hadoop_fluent_process_exists(options)
+  if hadoop_fluent_exists:
+    print "hadoop-fluent is running with pid {0}. Wait for stopping ...".format(pid)
+    run_command("kill {0}".format(pid))
+    # todo check process until it's stopped
+  else:
+    print "hadoop-fluent application is not running, nothing to stop."
+  pidfile_path = os.path.join(_pid_dir(options), "hadoop_fluent.pid")
+  if os.path.exists(pidfile_path):
+    os.remove(pidfile_path)
+
+def restart(options):
+  stop(options)
+  start(options) 
 
 def error(parser, message):
   print message
@@ -146,16 +162,18 @@ if __name__=="__main__":
   (options, args) = parser.parse_args()
 
   if options.action == "start":
-    validate(options)
+    print "Starting hadoop-fluent application ..."
+    validate(options, parser)
     start(options)
-    pass
   elif options.action == "stop":
-    pass
+    print "Stopping hadoop-fluent application ..."
+    stop(options)
   elif options.action == "restart":
-    pass
+    print "Restarting hadoop-fluent application ..."
+    validate(options, parser)
+    restart(options)
   elif options.action == "status":
     status(options)
-    pass
   elif options.action is None:
     error(parser, "Parameter 'action' is missing!")
   else:
