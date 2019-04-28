@@ -58,6 +58,8 @@ def start(options):
   java_opts = "-Dhadoop.fluent.app.name=hadoop-fluent"
   if options.server:
     java_opts = "{0} -Dhadoop.fluent.global.mode=server".format(java_opts)
+  if is_str_not_empty(options.archive_base_dir):
+    java_opts = "{0} -Dhadoop.fluent.global.archive_base_dir={1}".format(java_opts, options.archive_base_dir)
   java_opts = "{0} {1}".format(java_opts, options.extra_java_opts) if options.extra_java_opts else "{0}".format(java_opts)
   conf_file = os.path.join(conf_folder, "hadoop-fluent.conf")
   start_command = '{0} -classpath "{1}" {2} com.cloudera.hadoop.cloud.Main {3}'.format(_java_bin(options), classpath, java_opts, conf_file)
@@ -187,6 +189,7 @@ if __name__=="__main__":
   parser.add_option("-A", "--action", dest="action", type="string", help="action: start | stop | restart | status")
   parser.add_option("-s", "--server", dest="server", action="store_true", help="Run hadoop-fluent application with forwarder input")
   parser.add_option("-t", "--storage-type", dest="storage_type", type="string", help="storage type: s3 | abfs | wasb | gcs | hdfs")
+  parser.add_option("-d", "--archive-base-dir", dest="archive_base_dir", type="string", help="Base directory for hadoop-fluent uploader thread.")
   parser.add_option("-H", "--hadoop-conf", dest="hadoop_conf", type="string", help="hadoop conf folder that contains the core-site.xml file")
   parser.add_option("-c", "--conf", dest="conf", type="string", help="custom path for the hadoop-fluent configuration file")
   parser.add_option("-j", "--java-home", dest="java_home", type="string", help="Java home that is used for hadoop-fluent java application")
