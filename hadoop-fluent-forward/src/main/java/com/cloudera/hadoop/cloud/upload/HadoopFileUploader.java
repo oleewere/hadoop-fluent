@@ -14,19 +14,23 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class CloudStorageUploader extends Thread {
+public class HadoopFileUploader extends Thread {
 
-  private static final Logger logger = LogManager.getLogger(CloudStorageUploader.class);
+  private static final Logger logger = LogManager.getLogger(HadoopFileUploader.class);
 
   private final UploadClient uploadClient;
   private final HadoopFluentConf hadoopFluentConf;
   private final ExecutorService executorService;
+  private final AtomicBoolean uploadOnShutdow;
 
-  public CloudStorageUploader(final UploadClient uploadClient, final HadoopFluentConf hadoopFluentConf) {
+  public HadoopFileUploader(final UploadClient uploadClient, final HadoopFluentConf hadoopFluentConf) {
     this.uploadClient = uploadClient;
     this.hadoopFluentConf = hadoopFluentConf;
     this.executorService = Executors.newSingleThreadExecutor();
+    this.uploadOnShutdow = new AtomicBoolean(true);
+    addJvmShutdownHook();
   }
 
   @Override
@@ -100,5 +104,21 @@ public class CloudStorageUploader extends Thread {
       outputPath = outputWithoutBasePath;
     }
     return outputPath;
+  }
+
+  private void addJvmShutdownHook() {
+    uploadOnShutdow.set(hadoopFluentConf.getUploaderConf().isUploadOnShutdown());
+    boolean uploaderMode = !"server".equalsIgnoreCase(hadoopFluentConf.getMode());
+    if (uploaderMode) {
+      Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+        logger.info("Running JVM shutdown hook ...");
+        if (uploadOnShutdow.get()) {
+          this.interrupt();
+          this.doUpload(2);
+        } else {
+          logger.info("Uploader won't upload any files at shutdown.");
+        }
+      }));
+    }
   }
 }

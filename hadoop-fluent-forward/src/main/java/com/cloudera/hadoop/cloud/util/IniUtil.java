@@ -2,7 +2,6 @@ package com.cloudera.hadoop.cloud.util;
 
 import java.io.IOException;
 import java.io.Reader;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
@@ -13,6 +12,8 @@ public class IniUtil {
 
   public static Map<String, Properties> parseIni(Reader reader, Map<String, Properties> configs) throws IOException {
     new Properties() {
+      private static final long serialVersionUID = 1L;
+      
       private Properties section;
 
       @Override

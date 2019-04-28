@@ -2,7 +2,7 @@ package com.cloudera.hadoop.cloud.output;
 
 import com.cloudera.hadoop.cloud.buffer.LogFileBufferFactory;
 import com.cloudera.hadoop.cloud.conf.HadoopFluentConf;
-import com.cloudera.hadoop.cloud.upload.CloudStorageUploader;
+import com.cloudera.hadoop.cloud.upload.HadoopFileUploader;
 import influent.EventEntry;
 import influent.EventStream;
 import influent.Tag;
@@ -23,11 +23,11 @@ public class HadoopOutput {
   private static final Logger logger = LogManager.getLogger(HadoopOutput.class);
 
   private final HadoopFluentConf hadoopFluentConf;
-  private final CloudStorageUploader uploader;
+  private final HadoopFileUploader uploader;
   private final LoggerContext loggerContext;
   private final Map<String, Logger> logOutputs = new HashMap<>();
 
-  public HadoopOutput(HadoopFluentConf hadoopFluentConf, CloudStorageUploader uploader) {
+  public HadoopOutput(HadoopFluentConf hadoopFluentConf, HadoopFileUploader uploader) {
     this.hadoopFluentConf = hadoopFluentConf;
     this.uploader = uploader;
     loggerContext = (LoggerContext) LogManager.getContext(false);
@@ -90,7 +90,7 @@ public class HadoopOutput {
   private void addJvmShutdownHook() {
     boolean uploadOnShutdow = hadoopFluentConf.getUploaderConf().isUploadOnShutdown();
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-      logger.info("Running JVM shutdown hook...");
+      logger.info("Running JVM shutdown hook ...");
       this.removeLoggers();
       if (uploadOnShutdow) {
         uploader.interrupt();

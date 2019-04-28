@@ -42,6 +42,7 @@ public class HadoopFluentConf {
   private final String clusterName;
   private final String clusterType;
   private final Integer port;
+  private final String mode;
 
   public HadoopFluentConf(String iniFilePath) {
     try (final FileReader reader = new FileReader(iniFilePath)) {
@@ -50,9 +51,16 @@ public class HadoopFluentConf {
       logger.error("Error occurred during reading ini configuration file.", e);
       System.exit(1);
     }
-    this.clusterName = getConfigAsString("server", "cluster", "cl1");
-    this.clusterType = getConfigAsString("server", "cluster_type", "");
-    this.port = getConfigAsInteger("server", "forward_port", 24224);
+    this.mode = getConfigAsString("global", "mode", "uploader");
+    this.clusterName = getConfigAsString("global", "cluster", "cl1");
+    this.clusterType = getConfigAsString("global", "cluster_type", "");
+    this.port = getConfigAsInteger("global", "forward_port", 24224);
+    this.uploaderConf = new UploaderConf(
+      "",
+      getConfigAsInteger("uploader", "timeout_mins", 10),
+      getConfigAsInteger("uploader", "interval_secs", 300),
+      getConfigAsBoolean("uploader", "upload_on_shutdown", true)
+      );
     this.bufferConf = new BufferConf.Builder()
       .withRolloverArchiveBaseDir(getConfigAsString("buffer", "rollover_archive_base_dir", "/var/lib/hadoop-fluent/data"))
       .withRolloverSize(getConfigAsInteger("buffer", "rollover_size", 256))
@@ -65,12 +73,6 @@ public class HadoopFluentConf {
       .withUseGzip(getConfigAsBoolean("buffer", "use_gzip", true))
       .withAsyncLogProcess(getConfigAsBoolean("buffer", "async_log_process", false))
       .build();
-    this.uploaderConf = new UploaderConf(
-      "",
-      getConfigAsInteger("uploader", "timeout_mins", 10),
-      getConfigAsInteger("uploader", "interval_secs", 300),
-      getConfigAsBoolean("uploader", "upload_on_shutdown", true)
-      );
   }
 
   public BufferConf getBufferConf() {
@@ -87,6 +89,10 @@ public class HadoopFluentConf {
 
   public String getClusterType() {
     return this.clusterType;
+  }
+
+  public String getMode() {
+    return mode;
   }
 
   public Integer getPort() {
