@@ -1,5 +1,6 @@
 # Hadoop Fluent
 
+[![Build Status](https://travis-ci.org/oleewere/hadoop-fluent.svg?branch=master)](https://travis-ci.org/oleewere/hadoop-fluent)
 ![license](http://img.shields.io/badge/license-Apache%20v2-blue.svg)
 
 Hadoop Fluent is a tool a Java application which can communicate with Fluentd (or Fluent-bit) agents and/or upload data through HDFS client to cloud storage (or HDFS).
