@@ -1,6 +1,6 @@
-package com.cloudera.hadoop.cloud.upload;
+package com.oleewere.hadoop.cloud.upload;
 
-import com.cloudera.hadoop.cloud.conf.HadoopFluentConf;
+import com.oleewere.hadoop.cloud.conf.HadoopFluentConf;
 
 import java.io.Closeable;
 

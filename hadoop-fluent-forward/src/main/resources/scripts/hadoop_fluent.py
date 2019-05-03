@@ -62,7 +62,7 @@ def start(options):
     java_opts = "{0} -Dhadoop.fluent.global.archive_base_dir={1}".format(java_opts, options.archive_base_dir)
   java_opts = "{0} {1}".format(java_opts, options.extra_java_opts) if options.extra_java_opts else "{0}".format(java_opts)
   conf_file = os.path.join(conf_folder, "hadoop-fluent.conf")
-  start_command = '{0} -classpath "{1}" {2} com.cloudera.hadoop.cloud.Main {3}'.format(_java_bin(options), classpath, java_opts, conf_file)
+  start_command = '{0} -classpath "{1}" {2} Main {3}'.format(_java_bin(options), classpath, java_opts, conf_file)
   print "Start process with the following command: {0}".format(start_command)
   start_cmd(start_command, options)
 

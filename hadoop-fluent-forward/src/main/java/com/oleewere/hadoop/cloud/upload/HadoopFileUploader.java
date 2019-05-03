@@ -1,6 +1,6 @@
-package com.cloudera.hadoop.cloud.upload;
+package com.oleewere.hadoop.cloud.upload;
 
-import com.cloudera.hadoop.cloud.conf.HadoopFluentConf;
+import com.oleewere.hadoop.cloud.conf.HadoopFluentConf;
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;

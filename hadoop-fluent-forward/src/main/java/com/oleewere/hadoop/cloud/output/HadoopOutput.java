@@ -1,8 +1,8 @@
-package com.cloudera.hadoop.cloud.output;
+package com.oleewere.hadoop.cloud.output;
 
-import com.cloudera.hadoop.cloud.buffer.LogFileBufferFactory;
-import com.cloudera.hadoop.cloud.conf.HadoopFluentConf;
-import com.cloudera.hadoop.cloud.upload.HadoopFileUploader;
+import com.oleewere.hadoop.cloud.buffer.LogFileBufferFactory;
+import com.oleewere.hadoop.cloud.conf.HadoopFluentConf;
+import com.oleewere.hadoop.cloud.upload.HadoopFileUploader;
 import influent.EventEntry;
 import influent.EventStream;
 import influent.Tag;

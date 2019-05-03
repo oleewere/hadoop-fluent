@@ -1,6 +1,6 @@
-package com.cloudera.hadoop.cloud.util;
+package com.oleewere.hadoop.cloud.util;
 
-import com.cloudera.hadoop.cloud.conf.HadoopFluentConf;
+import com.oleewere.hadoop.cloud.conf.HadoopFluentConf;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;

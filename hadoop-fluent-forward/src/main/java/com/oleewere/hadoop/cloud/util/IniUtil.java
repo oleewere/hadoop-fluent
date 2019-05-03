@@ -1,4 +1,4 @@
-package com.cloudera.hadoop.cloud.util;
+package com.oleewere.hadoop.cloud.util;
 
 import java.io.IOException;
 import java.io.Reader;

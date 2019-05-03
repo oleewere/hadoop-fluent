@@ -1,7 +1,7 @@
-package com.cloudera.hadoop.cloud.buffer;
+package com.oleewere.hadoop.cloud.buffer;
 
-import com.cloudera.hadoop.cloud.conf.BufferConf;
-import com.cloudera.hadoop.cloud.conf.HadoopFluentConf;
+import com.oleewere.hadoop.cloud.conf.BufferConf;
+import com.oleewere.hadoop.cloud.conf.HadoopFluentConf;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.core.LoggerContext;

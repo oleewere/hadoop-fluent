@@ -1,4 +1,4 @@
-package com.cloudera.hadoop.cloud.conf;
+package com.oleewere.hadoop.cloud.conf;
 
 public class BufferConf {
 

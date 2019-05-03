@@ -1,10 +1,10 @@
-package com.cloudera.hadoop.cloud;
+package com.oleewere.hadoop.cloud;
 
-import com.cloudera.hadoop.cloud.conf.HadoopFluentConf;
-import com.cloudera.hadoop.cloud.output.HadoopOutput;
-import com.cloudera.hadoop.cloud.upload.HadoopFileUploader;
-import com.cloudera.hadoop.cloud.upload.HDFSUploadClient;
-import com.cloudera.hadoop.cloud.upload.UploadClient;
+import com.oleewere.hadoop.cloud.conf.HadoopFluentConf;
+import com.oleewere.hadoop.cloud.output.HadoopOutput;
+import com.oleewere.hadoop.cloud.upload.HadoopFileUploader;
+import com.oleewere.hadoop.cloud.upload.HDFSUploadClient;
+import com.oleewere.hadoop.cloud.upload.UploadClient;
 import influent.forward.ForwardCallback;
 import influent.forward.ForwardServer;
 import org.apache.logging.log4j.LogManager;

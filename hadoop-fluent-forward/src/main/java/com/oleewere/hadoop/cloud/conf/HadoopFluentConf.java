@@ -1,6 +1,6 @@
-package com.cloudera.hadoop.cloud.conf;
+package com.oleewere.hadoop.cloud.conf;
 
-import com.cloudera.hadoop.cloud.util.IniUtil;
+import com.oleewere.hadoop.cloud.util.IniUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
